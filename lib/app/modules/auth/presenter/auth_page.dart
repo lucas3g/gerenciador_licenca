@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:gerenciador_licenca/app/components/my_input_widget.dart';
@@ -29,7 +31,6 @@ class _AuthPageState extends State<AuthPage> {
         child: Container(
           padding: const EdgeInsets.all(20),
           width: context.screenWidth * .5,
-          height: context.screenHeight * .43,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white,
@@ -40,6 +41,7 @@ class _AuthPageState extends State<AuthPage> {
                 )
               ]),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +99,9 @@ class _AuthPageState extends State<AuthPage> {
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(context.screenWidth * .2, 40),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      exit(0);
+                    },
                     child: const Text('Sair'),
                   ),
                 ],

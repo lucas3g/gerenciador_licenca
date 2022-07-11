@@ -4,6 +4,7 @@ import 'dart:core';
 abstract class AppColors {
   Color get backgroundPrimary;
   Color get button;
+  Color get buttonCancelar;
   Color get titleAppBar;
   Color get titleMercadoria;
   Color get titleLicenca;
@@ -19,6 +20,9 @@ abstract class AppColors {
 class AppColorDefault implements AppColors {
   @override
   Color get button => Colors.white;
+
+  @override
+  Color get buttonCancelar => Colors.black;
 
   @override
   Color get backgroundPrimary => const Color(0xFFFFFFFF);

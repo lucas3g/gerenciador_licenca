@@ -10,8 +10,8 @@ abstract class AppTextStyles {
   TextStyle get titleLogin;
   TextStyle get titleLoginBlack;
   TextStyle get titleLicenca;
-  TextStyle get titleViagem;
-  TextStyle get titleImageNaoEncontrada;
+  TextStyle get labelCliente;
+  TextStyle get textCliente;
   TextStyle get textoSairApp;
   TextStyle get textoCadastroSucesso;
   TextStyle get textoTermo;
@@ -57,12 +57,12 @@ class AppTextStylesDefault implements AppTextStyles {
       fontWeight: FontWeight.w700);
 
   @override
-  TextStyle get titleViagem => GoogleFonts.montserrat(
+  TextStyle get labelCliente => GoogleFonts.montserrat(
       fontSize: 14, color: Colors.black, fontWeight: FontWeight.w700);
 
   @override
-  TextStyle get titleImageNaoEncontrada => GoogleFonts.montserrat(
-      fontSize: 12, color: Colors.black, fontWeight: FontWeight.w700);
+  TextStyle get textCliente =>
+      GoogleFonts.montserrat(fontSize: 14, color: Colors.black);
 
   @override
   TextStyle get textoSairApp => GoogleFonts.montserrat(

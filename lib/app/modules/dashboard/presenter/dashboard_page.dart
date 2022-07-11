@@ -20,7 +20,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     return Scaffold(
       appBar: AppBar(
         titleTextStyle: AppTheme.textStyles.titleAppBar,
-        title: const Text('DashBoard'),
+        title: const Text('DashBoard - Gerenciador de Licenças'),
         actions: [
           IconButton(
             onPressed: () {
@@ -46,13 +46,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
             indicatorColor: AppTheme.colors.primary,
             destinations: const [
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.attach_money_rounded),
+                selectedIcon: Icon(Icons.attach_money_rounded),
                 label: Text('Licenças'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.bookmark_border),
-                selectedIcon: Icon(Icons.book),
+                icon: Icon(Icons.receipt_long_rounded),
+                selectedIcon: Icon(Icons.receipt_long),
                 label: Text('Relatórios'),
               ),
             ],
