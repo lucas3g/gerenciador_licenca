@@ -26,6 +26,25 @@ class _LicencaPageState extends State<LicencaPage> {
 
   late TiposApp tiposApp = TiposApp.postoPlus;
 
+  final listaTeste = [
+    {'id': 'asdsad213sad12', 'app': 'Posto Plus'},
+    {'id': '3434asd123452s', 'app': 'Agil Coletas'},
+    {'id': 'fdsfds123asd12', 'app': 'Transportes'},
+    {'id': 'fdsfds123asd12', 'app': 'Agil Coletas'},
+    {'id': 'fds12321xzcxzc', 'app': 'Posto Plus'},
+    {'id': '123dfdscvaqwe2', 'app': 'Posto Plus'},
+    {'id': '2353asxcxa1s23', 'app': 'Agil Coletas'},
+    {'id': '345sadsa123s23', 'app': 'Agil Coletas'},
+    {'id': '657413adxcsd32', 'app': 'Transportes'},
+    {'id': '988312sdasih12', 'app': 'Transportes'},
+  ];
+
+  late String appOld = '';
+
+  void mudaApp(String app) {
+    appOld = app;
+  }
+
   Future showAlertNovaLicenca() async {
     await asuka.showDialog(
       barrierColor: Colors.black12,
@@ -198,36 +217,72 @@ class _LicencaPageState extends State<LicencaPage> {
                 ],
               ),
             ),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Checkbox(
-                      value: true,
-                      onChanged: (value) {},
-                      activeColor: AppTheme.colors.primary,
-                    ),
-                    title: const Text('ID: 298fda878qwe13'),
-                    onTap: () {},
-                    trailing: SizedBox(
-                      width: 40,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            splashRadius: 20,
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.delete_outline_rounded,
-                              color: AppTheme.colors.primary,
+                  listaTeste.sort((a, b) => a['app']!.compareTo(b['app']!));
+
+                  late bool visibility = false;
+
+                  if (index == 0 ||
+                      listaTeste[index]["app"] !=
+                          listaTeste[index - 1]["app"]) {
+                    visibility = true;
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Visibility(
+                        visible: visibility,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              listaTeste[index]["app"]!,
+                              style: AppTheme.textStyles.titleLicenca,
                             ),
-                          ),
-                        ],
+                            Container(
+                              height: 2,
+                              width:
+                                  listaTeste[index]["app"]!.length.toDouble() *
+                                      11,
+                              color: Colors.grey.shade200,
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
                       ),
-                    ),
+                      ListTile(
+                        leading: Checkbox(
+                          value: true,
+                          onChanged: (value) {},
+                          activeColor: AppTheme.colors.primary,
+                        ),
+                        title: Text(listaTeste[index]['id']!),
+                        onTap: () {},
+                        trailing: SizedBox(
+                          width: 40,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                splashRadius: 20,
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: AppTheme.colors.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 },
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemCount: 10,
+                itemCount: listaTeste.length,
               ),
             )
           ],
