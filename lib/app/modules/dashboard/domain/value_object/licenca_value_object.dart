@@ -1,7 +1,7 @@
 class LicencaValueObject {
   final String id;
   final String app;
-  final String ativo;
+  String ativo;
 
   LicencaValueObject({
     required this.id,
