@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/license_page.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/licenca_page.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/reports/reports_page.dart';
 import 'package:gerenciador_licenca/app/theme/app_theme.dart';
 

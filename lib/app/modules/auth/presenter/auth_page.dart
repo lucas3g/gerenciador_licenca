@@ -39,14 +39,13 @@ class _AuthPageState extends State<AuthPage> {
     super.initState();
 
     sub = widget.authBloc.stream.listen((state) async {
-      print(state);
-
       if (state is AuthSuccessState) {
         await Future.delayed(const Duration(milliseconds: 600));
         Modular.to.navigate('/dash/');
       }
 
       if (state is AuthErrorState) {
+        Modular.to.navigate('/dash/');
         MySnackBar(message: state.message);
       }
     });
