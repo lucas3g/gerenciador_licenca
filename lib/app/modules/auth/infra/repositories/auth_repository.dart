@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:gerenciador_licenca/app/core_module/types/either.dart';
 import 'package:gerenciador_licenca/app/modules/auth/domain/entities/user_entity.dart';
 import 'package:gerenciador_licenca/app/modules/auth/domain/exceptions/auth_exception.dart';
@@ -24,6 +25,8 @@ class AuthRepository implements IAuthRepository {
       return right(map);
     } on IAuthException catch (e) {
       return left(e);
+    } on DioError catch (e) {
+      return left(AuthException(message: e.message));
     } catch (e) {
       return left(AuthException(message: e.toString()));
     }

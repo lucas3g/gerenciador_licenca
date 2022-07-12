@@ -18,6 +18,8 @@ class AuthDataSource implements IAuthDataSource {
       data: ParamsToJson.toJson(loginParams),
     );
 
+    await Future.delayed(const Duration(seconds: 1));
+
     if (response.statusCode != 200) {
       throw const AuthException(message: 'Erro ao tentar fazer login');
     }

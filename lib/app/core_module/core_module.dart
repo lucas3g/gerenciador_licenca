@@ -1,3 +1,4 @@
+import 'package:gerenciador_licenca/app/core_module/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'services/shared_preferences/local_storage_interface.dart';
@@ -10,7 +11,7 @@ import 'services/client_http/dio_client_http.dart';
 
 Bind<Dio> _dioFactory() {
   final baseOptions = BaseOptions(
-    // baseUrl: baseUrl,
+    baseUrl: baseUrl,
     headers: {'Content-Type': 'application/json'},
   );
   return Bind.factory<Dio>((i) => Dio(baseOptions), export: true);

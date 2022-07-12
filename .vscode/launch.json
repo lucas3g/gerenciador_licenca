@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[dev] gerenciador_licenca",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define",
+                "BASE_URL=http://18.228.152.149:9000", 
+            ]
+        },
+        {
+            "name": "[prod] gerenciador_licenca",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--release"
+            ],
+            "toolArgs": [
+                "--dart-define",
+                "BASE_URL=http://18.228.152.149:9000",
+            ]            
+        },
+    ]
+}

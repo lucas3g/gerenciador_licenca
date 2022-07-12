@@ -1,14 +1,22 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:gerenciador_licenca/app/components/my_input_widget.dart';
+import 'package:gerenciador_licenca/app/modules/auth/domain/params/login_params.dart';
+import 'package:gerenciador_licenca/app/modules/auth/presenter/bloc/auth_bloc.dart';
+import 'package:gerenciador_licenca/app/modules/auth/presenter/bloc/events/auth_events.dart';
+import 'package:gerenciador_licenca/app/modules/auth/presenter/bloc/states/auth_states.dart';
 import 'package:gerenciador_licenca/app/theme/app_theme.dart';
 import 'package:gerenciador_licenca/app/utils/constants.dart';
 import 'package:gerenciador_licenca/app/utils/formatters.dart';
+import 'package:gerenciador_licenca/app/utils/my_snackbar.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key}) : super(key: key);
+  final AuthBloc authBloc;
+  const AuthPage({Key? key, required this.authBloc}) : super(key: key);
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -23,6 +31,33 @@ class _AuthPageState extends State<AuthPage> {
 
   GlobalKey<FormState> keyUser = GlobalKey<FormState>();
   GlobalKey<FormState> keyPass = GlobalKey<FormState>();
+
+  late StreamSubscription sub;
+
+  @override
+  void initState() {
+    super.initState();
+
+    sub = widget.authBloc.stream.listen((state) async {
+      print(state);
+
+      if (state is AuthSuccessState) {
+        await Future.delayed(const Duration(milliseconds: 600));
+        Modular.to.navigate('/dash/');
+      }
+
+      if (state is AuthErrorState) {
+        MySnackBar(message: state.message);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    sub.cancel();
+    widget.authBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +121,36 @@ class _AuthPageState extends State<AuthPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: Size(context.screenWidth * .2, 40),
-                    ),
-                    onPressed: () {
-                      Modular.to.navigate('/dash/');
-                    },
-                    child: const Text('Entrar'),
-                  ),
+                  BlocBuilder<AuthBloc, AuthStates>(
+                      bloc: widget.authBloc,
+                      builder: (context, state) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(context.screenWidth * .2, 40),
+                          ),
+                          onPressed: state is AuthLoadingState
+                              ? null
+                              : () {
+                                  final loginParams = LoginParams(
+                                    user: controllerUser.text.trim(),
+                                    password: controllerPass.text.trim(),
+                                  );
+
+                                  widget.authBloc.add(
+                                    LoginEvent(loginParams: loginParams),
+                                  );
+                                },
+                          child: state is AuthLoadingState
+                              ? const Center(
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : const Text('Entrar'),
+                        );
+                      }),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(context.screenWidth * .2, 40),
