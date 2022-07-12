@@ -23,7 +23,7 @@ void main() {
     ).thenAnswer((_) async => BaseResponse(
         {'id': 1, 'name': 'lucas'}, BaseRequest(url: '/user', method: 'POST')));
 
-    final result = authDataSource.login(loginParams);
+    final result = await authDataSource.login(loginParams);
 
     expect(result, isA<dynamic>());
   });
