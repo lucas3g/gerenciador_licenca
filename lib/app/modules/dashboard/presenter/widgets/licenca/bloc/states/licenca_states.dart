@@ -14,6 +14,22 @@ class LicencaSuccessState extends LicencaStates {
   });
 }
 
+class LicencaSaveSucessState extends LicencaStates {
+  final bool result;
+
+  LicencaSaveSucessState({
+    required this.result,
+  });
+}
+
+class LicencaUpdateSucessState extends LicencaStates {
+  final bool result;
+
+  LicencaUpdateSucessState({
+    required this.result,
+  });
+}
+
 class LicencaErrorState extends LicencaStates {
   final String message;
 

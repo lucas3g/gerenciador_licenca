@@ -1,6 +1,8 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/repositories/licenca_repository.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/usecases/get_licencas_usecase.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/domain/usecases/save_licenca_usecase.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/domain/usecases/update_licenca_usecase.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/external/datasources/licenca_datasource.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/datasources/licenca_datasource.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/repositories/licenca_repository.dart';
@@ -27,10 +29,20 @@ class DashBoardModule extends Module {
     Bind.factory<IGetLicencasUseCase>(
       (i) => GetLicencasUseCase(licencaRepository: i()),
     ),
+    Bind.factory<ISaveLicencaUseCase>(
+      (i) => SaveLicencaUseCase(licencaRepository: i()),
+    ),
+    Bind.factory<IUpdateLicencaUseCase>(
+      (i) => UpdateLicencaUseCase(licencaRepository: i()),
+    ),
 
     //BLOC
     Bind.singleton<LicencaBloc>(
-      (i) => LicencaBloc(getLicencasUseCase: i()),
+      (i) => LicencaBloc(
+        getLicencasUseCase: i(),
+        saveLicencaUseCase: i(),
+        updateLicencaUseCase: i(),
+      ),
     )
   ];
 

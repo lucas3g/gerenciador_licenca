@@ -58,6 +58,17 @@ class _AuthPageState extends State<AuthPage> {
     super.dispose();
   }
 
+  void login() {
+    final loginParams = LoginParams(
+      user: controllerUser.text.trim(),
+      password: controllerPass.text.trim(),
+    );
+
+    widget.authBloc.add(
+      LoginEvent(loginParams: loginParams),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +104,7 @@ class _AuthPageState extends State<AuthPage> {
               ),
               const SizedBox(height: 10),
               MyInputWidget(
+                autoFocus: true,
                 focusNode: fUser,
                 hintText: 'Digite seu Usuário',
                 label: 'Usuário',
@@ -110,7 +122,9 @@ class _AuthPageState extends State<AuthPage> {
                 hintText: 'Digite sua Senha',
                 label: 'Senha',
                 onChanged: (_) {},
-                onFieldSubmitted: (value) {},
+                onFieldSubmitted: (value) {
+                  login();
+                },
                 textEditingController: controllerPass,
                 formKey: keyPass,
                 obscureText: true,
@@ -130,14 +144,7 @@ class _AuthPageState extends State<AuthPage> {
                           onPressed: state is AuthLoadingState
                               ? null
                               : () {
-                                  final loginParams = LoginParams(
-                                    user: controllerUser.text.trim(),
-                                    password: controllerPass.text.trim(),
-                                  );
-
-                                  widget.authBloc.add(
-                                    LoginEvent(loginParams: loginParams),
-                                  );
+                                  login();
                                 },
                           child: state is AuthLoadingState
                               ? const Center(

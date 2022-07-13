@@ -1,7 +1,7 @@
 abstract class IClientHttp {
   Future<BaseResponse> get(String path);
-  Future<BaseResponse> post(String path, {Map<String, dynamic>? data});
-  Future<BaseResponse> put(String path, {Map<String, dynamic>? data});
+  Future<BaseResponse> post(String path, {dynamic data});
+  Future<BaseResponse> put(String path, {dynamic data});
   Future<BaseResponse> upload(String path, {List<int>? data});
   Future<BaseResponse> delete(String path);
   void setBaseUrl(String url);

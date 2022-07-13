@@ -1,3 +1,4 @@
+import 'package:gerenciador_licenca/app/core_module/constants/constants.dart';
 import 'package:gerenciador_licenca/app/core_module/services/client_http/client_http_interface.dart';
 import 'package:gerenciador_licenca/app/modules/auth/domain/exceptions/auth_exception.dart';
 import 'package:gerenciador_licenca/app/modules/auth/domain/params/login_params.dart';
@@ -14,7 +15,7 @@ class AuthDataSource implements IAuthDataSource {
   @override
   Future login(LoginParams loginParams) async {
     final response = await clientHttp.post(
-      '/user',
+      '$baseUrlCliente/user',
       data: ParamsToJson.toJson(loginParams),
     );
 

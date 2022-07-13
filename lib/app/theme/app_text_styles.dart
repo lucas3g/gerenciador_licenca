@@ -7,6 +7,7 @@ abstract class AppTextStyles {
   TextStyle get button;
   TextStyle get titleAppBar;
   TextStyle get titleSplash;
+  TextStyle get titleSplashBlack;
   TextStyle get titleLogin;
   TextStyle get titleLoginBlack;
   TextStyle get titleLicenca;
@@ -33,9 +34,13 @@ class AppTextStylesDefault implements AppTextStyles {
 
   @override
   TextStyle get titleSplash => GoogleFonts.montserrat(
-      fontSize: 30,
+      fontSize: 60,
       color: AppTheme.colors.primary,
       fontWeight: FontWeight.w700);
+
+  @override
+  TextStyle get titleSplashBlack => GoogleFonts.montserrat(
+      fontSize: 60, color: Colors.black, fontWeight: FontWeight.w700);
 
   @override
   TextStyle get titleLogin => GoogleFonts.montserrat(

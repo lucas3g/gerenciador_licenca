@@ -16,6 +16,13 @@ class GetLicencasUseCase implements IGetLicencasUseCase {
 
   @override
   Future<Either<ILicencaException, LicencasEntity>> call(int codCliente) async {
+    if (codCliente == 0) {
+      return left(
+        const LicencaException(
+            message: 'Código do cliente não pode ser 0 ou em branco.'),
+      );
+    }
+
     return await licencaRepository.getLicencas(codCliente);
   }
 }

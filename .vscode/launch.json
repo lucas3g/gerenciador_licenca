@@ -8,6 +8,8 @@
             "toolArgs": [
                 "--dart-define",
                 "BASE_URL=http://18.228.152.149:9000", 
+                "--dart-define",
+                "BASE_URL_CLIENTES=https://elinfo2.jelastic.saveincloud.net/licenca",
             ]
         },
         {
@@ -20,6 +22,8 @@
             "toolArgs": [
                 "--dart-define",
                 "BASE_URL=http://18.228.152.149:9000",
+                "--dart-define",
+                "BASE_URL_CLIENTES=https://elinfo2.jelastic.saveincloud.net/licenca",
             ]            
         },
     ]

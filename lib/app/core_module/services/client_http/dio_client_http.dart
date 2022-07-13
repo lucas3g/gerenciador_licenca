@@ -28,7 +28,7 @@ class DioClientHttp implements IClientHttp {
   @override
   Future<BaseResponse> post(
     String path, {
-    Map<String, dynamic>? data,
+    dynamic data,
   }) async {
     final response = await _dio.post(path, data: data);
     return _responseAdapter(response);
@@ -43,7 +43,7 @@ class DioClientHttp implements IClientHttp {
   @override
   Future<BaseResponse> put(
     String path, {
-    Map<String, dynamic>? data,
+    dynamic data,
   }) async {
     final response = await _dio.put(path, data: data);
     return _responseAdapter(response);

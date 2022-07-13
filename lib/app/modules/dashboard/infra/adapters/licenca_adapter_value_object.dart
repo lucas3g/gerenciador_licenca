@@ -3,9 +3,12 @@ import 'package:gerenciador_licenca/app/modules/dashboard/domain/value_object/li
 class LicencaAdapterValueObject {
   static LicencaValueObject fromMap(dynamic map) {
     return LicencaValueObject(
-      id: map['id'],
-      app: map['app'],
-      ativo: map['ativo'],
+      id: map['ID_DEVICE'],
+      app: map['DESC_APP'],
+      ativo: map['ATIVO'],
+      descricao: map['DESCRICAO'],
+      idApp: map['ID_APP'],
+      apelido: map['APELIDO'],
     );
   }
 }

@@ -3,10 +3,9 @@ import 'package:gerenciador_licenca/app/modules/dashboard/domain/value_object/cl
 class ClienteAdapter {
   static ClienteValueObject fromMap(dynamic map) {
     return ClienteValueObject(
-      name: map['name'],
-      id: map['id'],
-      CNPJCPF: map['CNPJCPF'],
-      telefone: map['telefone'],
+      name: map['NOME'],
+      CNPJCPF: map['CNPJ'],
+      telefone: map['FONE'] ?? '' ?? map['CELULAR'] ?? '',
     );
   }
 }
