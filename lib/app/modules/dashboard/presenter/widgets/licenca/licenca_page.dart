@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gerenciador_licenca/app/components/my_input_widget.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/domain/entities/licencas_entity.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/entities/new_licenca_entity.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/clientes_bloc.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/events/clientes_events.dart';
@@ -46,16 +47,19 @@ class _LicencaPageState extends State<LicencaPage> {
   FocusNode fDescricao = FocusNode();
   FocusNode fF12 = FocusNode();
   FocusNode fPesquisaCliente = FocusNode();
+  FocusNode fUpdateLinceca = FocusNode();
 
   TextEditingController controllerBusca = TextEditingController();
   TextEditingController controllerIDPhone = TextEditingController();
   TextEditingController controllerDescricao = TextEditingController();
   TextEditingController controllerPesquisa = TextEditingController();
+  TextEditingController controllerUpdateLicenca = TextEditingController();
 
   GlobalKey<FormState> keyBusca = GlobalKey<FormState>();
   GlobalKey<FormState> keyIDPhone = GlobalKey<FormState>();
   GlobalKey<FormState> keyDescricao = GlobalKey<FormState>();
   GlobalKey<FormState> keyPesquisa = GlobalKey<FormState>();
+  GlobalKey<FormState> keyUpdateLicenca = GlobalKey<FormState>();
 
   late TiposApp tiposApp = TiposApp.upVendas;
 
@@ -81,6 +85,73 @@ class _LicencaPageState extends State<LicencaPage> {
         MySnackBar(message: state.message);
       }
     });
+  }
+
+  Future showAlertUpdateLicenca(
+      {required LicencasEntity licencasEntity, required int index}) async {
+    await asuka.showDialog(
+      barrierColor: Colors.black12,
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Atualizar código da licença'),
+            const Divider(),
+            MyInputWidget(
+              focusNode: fUpdateLinceca,
+              hintText: 'Digite o código da licença',
+              label: 'Código da licença',
+              onChanged: (value) {},
+              textEditingController: controllerUpdateLicenca,
+              formKey: keyUpdateLicenca,
+            ),
+            const Divider(),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      controllerUpdateLicenca.clear();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancelar'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final newLicencaEntity = NewLicencaEntity(
+                        ID_DEVICE: controllerUpdateLicenca.text.trim(),
+                        APELIDO: licencasEntity.cliente.CNPJCPF
+                            .replaceAll('.', '')
+                            .replaceAll('/', '')
+                            .replaceAll('-', ''),
+                        ATIVO: licencasEntity.licencas[index].ativo,
+                        ID_EMPRESA:
+                            int.tryParse(controllerBusca.text.trim()) ?? 0,
+                        DESCRICAO: licencasEntity.licencas[index].descricao,
+                        ID_APP: licencasEntity.licencas[index].idApp,
+                      );
+
+                      widget.licencaBloc.add(
+                        UpdateLicencaEvent(
+                          licencaEntity: newLicencaEntity,
+                          idDevice: licencasEntity.licencas[index].id,
+                        ),
+                      );
+                      controllerUpdateLicenca.clear();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Atualizar'),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Future showAlertNovaLicenca({required String cnpj}) async {
@@ -243,8 +314,8 @@ class _LicencaPageState extends State<LicencaPage> {
                   hintText: 'Digite o nome do cliente',
                   label: 'Nome do Cliente',
                   onChanged: (value) {
-                    EasyDebounce.debounce('tag', const Duration(seconds: 1),
-                        () {
+                    EasyDebounce.debounce(
+                        'tag', const Duration(milliseconds: 500), () {
                       widget.clientesBloc.add(
                         GetClientesByNomeEvent(
                           nome: controllerPesquisa.text.trim(),
@@ -387,7 +458,10 @@ class _LicencaPageState extends State<LicencaPage> {
                 if (state is LicencaErrorState) {
                   return Expanded(
                     child: Center(
-                      child: Text(state.message),
+                      child: Text(
+                        state.message,
+                        style: AppTheme.textStyles.titleLicenca,
+                      ),
                     ),
                   );
                 }
@@ -420,8 +494,11 @@ class _LicencaPageState extends State<LicencaPage> {
                           ],
                         ),
                       ),
-                      const Center(
-                        child: Text('Nenhuma licença encontrada.'),
+                      Center(
+                        child: Text(
+                          'Nenhuma licença encontrada.',
+                          style: AppTheme.textStyles.titleLicenca,
+                        ),
                       ),
                     ],
                   );
@@ -560,6 +637,15 @@ class _LicencaPageState extends State<LicencaPage> {
                                     ? Text(
                                         listLicencas.licencas[index].descricao)
                                     : null,
+                                onTap: () async {
+                                  controllerUpdateLicenca.text =
+                                      listLicencas.licencas[index].id;
+
+                                  await showAlertUpdateLicenca(
+                                    licencasEntity: listLicencas,
+                                    index: index,
+                                  );
+                                },
                               ),
                             ],
                           );

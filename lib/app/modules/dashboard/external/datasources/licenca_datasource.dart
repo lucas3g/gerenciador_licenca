@@ -25,11 +25,11 @@ class LicencaDataSource implements ILicencaDataSource {
         .get('$baseUrlCliente/getLicencaHelpCodigo/$codCliente');
 
     if (responseLicenca.statusCode != 200) {
-      throw const LicencaException(message: 'Erro ao buscar licenca');
+      throw const LicencaException(message: 'Erro ao buscar licenca.');
     }
 
     if (responseCliente.data.toString().trim() == '[]') {
-      throw const LicencaException(message: 'Cliente não encontrado');
+      throw const LicencaException(message: 'Cliente não encontrado.');
     }
 
     late dynamic result = {'licencas': responseLicenca.data};
