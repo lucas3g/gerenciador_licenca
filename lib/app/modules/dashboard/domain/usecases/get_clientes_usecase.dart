@@ -22,6 +22,9 @@ class GetClientesUseCase implements IGetClientesUseCase {
         const LicencaException(message: 'Nome não pode ser vazio.'),
       );
     }
-    return await clientesRepository.getClientes(nome);
+
+    final result = await clientesRepository.getClientes(nome);
+
+    return result;
   }
 }
