@@ -1,8 +1,12 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/clientes_bloc.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/licenca_bloc.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/states/licenca_states.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/licenca_page.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/reports/reports_page.dart';
 import 'package:gerenciador_licenca/app/theme/app_theme.dart';
@@ -10,7 +14,12 @@ import 'package:asuka/asuka.dart' as asuka;
 
 class DashBoardPage extends StatefulWidget {
   final LicencaBloc licencaBloc;
-  const DashBoardPage({Key? key, required this.licencaBloc}) : super(key: key);
+  final ClientesBloc clientesBloc;
+  const DashBoardPage({
+    Key? key,
+    required this.licencaBloc,
+    required this.clientesBloc,
+  }) : super(key: key);
 
   @override
   State<DashBoardPage> createState() => _DashBoardPageState();
@@ -94,6 +103,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 controllerPage.animateToPage(index,
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeIn);
+                widget.licencaBloc.emit(LicencaInitialState());
               });
             },
             labelType: NavigationRailLabelType.all,
@@ -118,6 +128,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
               children: [
                 LicencaPage(
                   licencaBloc: widget.licencaBloc,
+                  clientesBloc: widget.clientesBloc,
                 ),
                 const ReportsPage(),
               ],

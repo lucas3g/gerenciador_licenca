@@ -1,16 +1,24 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'dart:async';
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gerenciador_licenca/app/components/my_input_widget.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/entities/new_licenca_entity.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/clientes_bloc.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/events/clientes_events.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/events/licenca_events.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/licenca_bloc.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/states/clientes_states.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/presenter/widgets/licenca/bloc/states/licenca_states.dart';
 import 'package:gerenciador_licenca/app/theme/app_theme.dart';
 import 'package:gerenciador_licenca/app/utils/constants.dart';
 import 'package:asuka/asuka.dart' as asuka;
+import 'package:gerenciador_licenca/app/utils/formatters.dart';
+import 'package:gerenciador_licenca/app/utils/my_snackbar.dart';
 
 enum TiposApp {
   upVendas,
@@ -21,7 +29,12 @@ enum TiposApp {
 
 class LicencaPage extends StatefulWidget {
   final LicencaBloc licencaBloc;
-  const LicencaPage({Key? key, required this.licencaBloc}) : super(key: key);
+  final ClientesBloc clientesBloc;
+  const LicencaPage({
+    Key? key,
+    required this.licencaBloc,
+    required this.clientesBloc,
+  }) : super(key: key);
 
   @override
   State<LicencaPage> createState() => _LicencaPageState();
@@ -47,6 +60,7 @@ class _LicencaPageState extends State<LicencaPage> {
   late TiposApp tiposApp = TiposApp.upVendas;
 
   late StreamSubscription sub;
+  late StreamSubscription subClientes;
 
   @override
   void initState() {
@@ -59,6 +73,12 @@ class _LicencaPageState extends State<LicencaPage> {
           GetLicencaEvent(
               codCliente: int.tryParse(controllerBusca.text.trim()) ?? 0),
         );
+      }
+    });
+
+    subClientes = widget.clientesBloc.stream.listen((state) {
+      if (state is ClientesErrorState) {
+        MySnackBar(message: state.message);
       }
     });
   }
@@ -92,6 +112,9 @@ class _LicencaPageState extends State<LicencaPage> {
                     onChanged: (value) {},
                     textEditingController: controllerDescricao,
                     formKey: keyDescricao,
+                    maxLength: null,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
                   ),
                   const SizedBox(height: 10),
                   RadioListTile(
@@ -207,40 +230,80 @@ class _LicencaPageState extends State<LicencaPage> {
       barrierColor: Colors.black12,
       builder: (context) {
         return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Pesquisar cliente'),
-              const Divider(),
-              MyInputWidget(
-                autoFocus: true,
-                focusNode: fPesquisaCliente,
-                hintText: 'Digite o nome do cliente',
-                label: 'Nome do Cliente',
-                onChanged: (value) {},
-                textEditingController: controllerPesquisa,
-                formKey: keyPesquisa,
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: context.screenHeight * .5,
-                width: context.screenWidth * .5,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: const Text('Lucas Silva'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        controllerBusca.text = '$index';
-                      },
-                    );
+          content: SizedBox(
+            width: context.screenWidth * .5,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Pesquisar cliente'),
+                const Divider(),
+                MyInputWidget(
+                  autoFocus: true,
+                  focusNode: fPesquisaCliente,
+                  hintText: 'Digite o nome do cliente',
+                  label: 'Nome do Cliente',
+                  onChanged: (value) {
+                    EasyDebounce.debounce('tag', const Duration(seconds: 1),
+                        () {
+                      widget.clientesBloc.add(
+                        GetClientesByNomeEvent(
+                          nome: controllerPesquisa.text.trim(),
+                        ),
+                      );
+                    });
                   },
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemCount: 10,
+                  textEditingController: controllerPesquisa,
+                  formKey: keyPesquisa,
+                  inputFormaters: [UpperCaseTextFormatter()],
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                BlocBuilder<ClientesBloc, ClientesStates>(
+                    bloc: widget.clientesBloc,
+                    builder: (context, state) {
+                      if (state is ClientesInitialState) {
+                        return Container();
+                      }
+
+                      if (state is! ClientesSuccessState) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      final clientes = state.clientes;
+
+                      if (clientes.isEmpty) {
+                        return const Text('Nenhum cliente encontrado');
+                      }
+
+                      return SizedBox(
+                        height: context.screenHeight * .5,
+                        width: context.screenWidth * .5,
+                        child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(clientes[index].nome),
+                              subtitle: Text('${clientes[index].codigo}'),
+                              onTap: () {
+                                Navigator.pop(context);
+                                controllerBusca.text =
+                                    '${clientes[index].codigo}';
+                                widget.licencaBloc.add(
+                                  GetLicencaEvent(
+                                    codCliente: int.tryParse(
+                                            controllerBusca.text.trim()) ??
+                                        0,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 10),
+                          itemCount: clientes.length,
+                        ),
+                      );
+                    }),
+              ],
+            ),
           ),
         );
       },
@@ -265,6 +328,7 @@ class _LicencaPageState extends State<LicencaPage> {
                     onKey: (key) async {
                       if (key.isKeyPressed(LogicalKeyboardKey.f12)) {
                         controllerBusca.clear();
+                        widget.clientesBloc.emit(ClientesInitialState());
                         await showModalPesquisaCliente();
                       }
                     },
@@ -357,7 +421,7 @@ class _LicencaPageState extends State<LicencaPage> {
                         ),
                       ),
                       const Center(
-                        child: Text('Nenhuma Licença encontrada'),
+                        child: Text('Nenhuma licença encontrada.'),
                       ),
                     ],
                   );
@@ -365,7 +429,6 @@ class _LicencaPageState extends State<LicencaPage> {
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     RichText(
                       text: TextSpan(
@@ -393,7 +456,7 @@ class _LicencaPageState extends State<LicencaPage> {
                             style: AppTheme.textStyles.textCliente,
                           ),
                           TextSpan(
-                            text: ' TELEFONE: ',
+                            text: '  Telefone: ',
                             style: AppTheme.textStyles.labelCliente,
                           ),
                           TextSpan(
@@ -497,22 +560,6 @@ class _LicencaPageState extends State<LicencaPage> {
                                     ? Text(
                                         listLicencas.licencas[index].descricao)
                                     : null,
-                                onTap: () {},
-                                // trailing: SizedBox(
-                                //   width: 40,
-                                //   child: Row(
-                                //     children: [
-                                //       IconButton(
-                                //         splashRadius: 20,
-                                //         onPressed: () {},
-                                //         icon: Icon(
-                                //           Icons.delete_outline_rounded,
-                                //           color: AppTheme.colors.primary,
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
                               ),
                             ],
                           );

@@ -46,6 +46,7 @@ dependencies:
   mocktail: ^0.3.0
   flutter_acrylic: ^1.0.0+2
   keyboard_event: ^0.3.2
+  easy_debounce: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:

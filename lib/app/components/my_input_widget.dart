@@ -26,6 +26,8 @@ class MyInputWidget extends StatefulWidget {
   final void Function()? onEditingComplete;
   final bool readOnly;
   final bool autoFocus;
+  final bool expands;
+  final TextInputAction? textInputAction;
 
   const MyInputWidget({
     Key? key,
@@ -48,6 +50,8 @@ class MyInputWidget extends StatefulWidget {
     this.onEditingComplete,
     this.readOnly = false,
     this.autoFocus = false,
+    this.expands = false,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -61,6 +65,8 @@ class _MyInputWidgetState extends State<MyInputWidget> {
       key: widget.formKey,
       autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
       child: TextFormField(
+        textInputAction: widget.textInputAction,
+        expands: widget.expands,
         autofocus: widget.autoFocus,
         readOnly: widget.readOnly,
         onEditingComplete: widget.onEditingComplete,
