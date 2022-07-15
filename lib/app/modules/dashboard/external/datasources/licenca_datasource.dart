@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:gerenciador_licenca/app/core_module/constants/constants.dart';
 import 'package:gerenciador_licenca/app/core_module/services/client_http/client_http_interface.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/exceptions/licenca_exception.dart';
@@ -21,22 +19,11 @@ class LicencaDataSource implements ILicencaDataSource {
 
     clientHttp.setHeaders({'Content-Type': 'application/json'});
 
-    final responseCliente = await clientHttp
-        .get('$baseUrlCliente/getLicencaHelpCodigo/$codCliente');
-
     if (responseLicenca.statusCode != 200) {
       throw const LicencaException(message: 'Erro ao buscar licenca.');
     }
 
-    if (responseCliente.data.toString().trim() == '[]') {
-      throw const LicencaException(message: 'Cliente não encontrado.');
-    }
-
-    late dynamic result = {'licencas': responseLicenca.data};
-
-    result['cliente'] = jsonDecode(responseCliente.data)['dados'][0];
-
-    return result;
+    return responseLicenca.data;
   }
 
   @override

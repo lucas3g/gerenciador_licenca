@@ -28,4 +28,21 @@ class ClientesDataSource implements IClientesDataSource {
 
     return jsonDecode(response.data)['dados'];
   }
+
+  @override
+  Future<dynamic> getClientesByCode(int codCliente) async {
+    final response = await clientHttp
+        .get('$baseUrlCliente/getLicencaHelpCodigo/$codCliente');
+
+    if (response.statusCode != 200) {
+      throw const LicencaException(
+          message: 'Erro ao buscar clientes por codigo');
+    }
+
+    if (response.data.toString().trim() == '[]') {
+      return [];
+    }
+
+    return jsonDecode(response.data)['dados'][0];
+  }
 }

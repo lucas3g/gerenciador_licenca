@@ -31,7 +31,7 @@ class DashBoardModule extends Module {
 
     //REPOSITORIES
     Bind.factory<ILicencaRepository>(
-      (i) => LicencaRepository(licencaDataSource: i()),
+      (i) => LicencaRepository(licencaDataSource: i(), clientesDataSource: i()),
     ),
     Bind.factory<IClientesRepository>(
       (i) => ClientesRepository(clientesDataSource: i()),

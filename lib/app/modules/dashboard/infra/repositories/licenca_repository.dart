@@ -6,20 +6,34 @@ import 'package:gerenciador_licenca/app/modules/dashboard/domain/exceptions/lice
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/repositories/licenca_repository.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/adapters/licenca_adapter.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/adapters/new_licenca_adapter.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/infra/datasources/clientes_datasource.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/datasources/licenca_datasource.dart';
 
 class LicencaRepository implements ILicencaRepository {
   final ILicencaDataSource licencaDataSource;
+  final IClientesDataSource clientesDataSource;
 
   LicencaRepository({
     required this.licencaDataSource,
+    required this.clientesDataSource,
   });
 
   @override
   Future<Either<ILicencaException, LicencasEntity>> getLicencas(
       int codCliente) async {
     try {
-      final result = await licencaDataSource.getLicencas(codCliente);
+      final resultLicencas = await licencaDataSource.getLicencas(codCliente);
+      final resultClientes =
+          await clientesDataSource.getClientesByCode(codCliente);
+
+      final result = {'licencas': resultLicencas};
+
+      if (resultClientes.toString().trim() == '[]') {
+        return left(
+            const LicencaException(message: 'Nenhum cliente encontrado.'));
+      }
+
+      result['cliente'] = resultClientes;
 
       final map = LicencaAdapter.fromMap(result);
 
