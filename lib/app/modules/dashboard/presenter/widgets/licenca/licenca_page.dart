@@ -48,18 +48,21 @@ class _LicencaPageState extends State<LicencaPage> {
   FocusNode fF12 = FocusNode();
   FocusNode fPesquisaCliente = FocusNode();
   FocusNode fUpdateLinceca = FocusNode();
+  FocusNode fUpdateDescricao = FocusNode();
 
   TextEditingController controllerBusca = TextEditingController();
   TextEditingController controllerIDPhone = TextEditingController();
   TextEditingController controllerDescricao = TextEditingController();
   TextEditingController controllerPesquisa = TextEditingController();
   TextEditingController controllerUpdateLicenca = TextEditingController();
+  TextEditingController controllerUpdateDescricao = TextEditingController();
 
   GlobalKey<FormState> keyBusca = GlobalKey<FormState>();
   GlobalKey<FormState> keyIDPhone = GlobalKey<FormState>();
   GlobalKey<FormState> keyDescricao = GlobalKey<FormState>();
   GlobalKey<FormState> keyPesquisa = GlobalKey<FormState>();
   GlobalKey<FormState> keyUpdateLicenca = GlobalKey<FormState>();
+  GlobalKey<FormState> keyUpdateDescricao = GlobalKey<FormState>();
 
   late TiposApp tiposApp = TiposApp.upVendas;
 
@@ -95,7 +98,8 @@ class _LicencaPageState extends State<LicencaPage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Atualizar código da licença'),
+            Text('Atualizar código da licença',
+                style: AppTheme.textStyles.titleLicenca),
             const Divider(),
             MyInputWidget(
               focusNode: fUpdateLinceca,
@@ -104,6 +108,15 @@ class _LicencaPageState extends State<LicencaPage> {
               onChanged: (value) {},
               textEditingController: controllerUpdateLicenca,
               formKey: keyUpdateLicenca,
+            ),
+            const SizedBox(height: 10),
+            MyInputWidget(
+              focusNode: fUpdateDescricao,
+              hintText: 'Digite a descrição da licença',
+              label: 'Descrição da licença',
+              onChanged: (value) {},
+              textEditingController: controllerUpdateDescricao,
+              formKey: keyUpdateDescricao,
             ),
             const Divider(),
             Row(
@@ -130,7 +143,7 @@ class _LicencaPageState extends State<LicencaPage> {
                         ATIVO: licencasEntity.licencas[index].ativo,
                         ID_EMPRESA:
                             int.tryParse(controllerBusca.text.trim()) ?? 0,
-                        DESCRICAO: licencasEntity.licencas[index].descricao,
+                        DESCRICAO: controllerUpdateDescricao.text.trim(),
                         ID_APP: licencasEntity.licencas[index].idApp,
                       );
 
@@ -161,133 +174,144 @@ class _LicencaPageState extends State<LicencaPage> {
         return AlertDialog(
           content: StatefulBuilder(
             builder: (context, setStateAlert) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Nova licença', style: AppTheme.textStyles.titleLicenca),
-                  const Divider(),
-                  MyInputWidget(
-                    focusNode: fIDPhone,
-                    hintText: 'Digite o código do celular',
-                    label: 'Código do celular',
-                    onChanged: (value) {},
-                    textEditingController: controllerIDPhone,
-                    formKey: keyIDPhone,
-                    maxLength: 20,
-                  ),
-                  const SizedBox(height: 10),
-                  MyInputWidget(
-                    focusNode: fDescricao,
-                    hintText: 'Digite descrição da licença',
-                    label: 'Descrição',
-                    onChanged: (value) {},
-                    textEditingController: controllerDescricao,
-                    formKey: keyDescricao,
-                    maxLength: null,
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
-                  ),
-                  const SizedBox(height: 10),
-                  RadioListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+              return SizedBox(
+                width: context.screenWidth * .3,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Nova licença',
+                        style: AppTheme.textStyles.titleLicenca),
+                    const Divider(),
+                    MyInputWidget(
+                      focusNode: fIDPhone,
+                      hintText: 'Digite o código do celular',
+                      label: 'Código do celular',
+                      campoVazio: 'Código do celular não pode ser vazio.',
+                      onChanged: (value) {},
+                      textEditingController: controllerIDPhone,
+                      formKey: keyIDPhone,
+                      maxLength: 20,
                     ),
-                    activeColor: AppTheme.colors.primary,
-                    title: const Text('Up Vendas'),
-                    value: TiposApp.upVendas,
-                    groupValue: tiposApp,
-                    onChanged: (TiposApp? value) {
-                      setStateAlert(() {
-                        tiposApp = value!;
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                    const SizedBox(height: 10),
+                    MyInputWidget(
+                      focusNode: fDescricao,
+                      hintText: 'Digite descrição da licença',
+                      label: 'Descrição',
+                      campoVazio: 'Descrição não pode ser vazia.',
+                      onChanged: (value) {},
+                      textEditingController: controllerDescricao,
+                      formKey: keyDescricao,
+                      maxLength: null,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
                     ),
-                    activeColor: AppTheme.colors.primary,
-                    title: const Text('Agil Coletas'),
-                    value: TiposApp.agilColetas,
-                    groupValue: tiposApp,
-                    onChanged: (TiposApp? value) {
-                      setStateAlert(() {
-                        tiposApp = value!;
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    activeColor: AppTheme.colors.primary,
-                    title: const Text('Posto Plus'),
-                    value: TiposApp.postoPlus,
-                    groupValue: tiposApp,
-                    onChanged: (TiposApp? value) {
-                      setStateAlert(() {
-                        tiposApp = value!;
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    activeColor: AppTheme.colors.primary,
-                    title: const Text('Transportes'),
-                    value: TiposApp.transportes,
-                    groupValue: tiposApp,
-                    onChanged: (TiposApp? value) {
-                      setStateAlert(() {
-                        tiposApp = value!;
-                      });
-                    },
-                  ),
-                  const Divider(),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            controllerIDPhone.clear();
-                          },
-                          child: const Text('Cancelar'),
-                        ),
+                    const SizedBox(height: 10),
+                    RadioListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final newLicencaEntity = NewLicencaEntity(
-                              ID_DEVICE: controllerIDPhone.text.trim(),
-                              APELIDO: cnpj
-                                  .replaceAll('.', '')
-                                  .replaceAll('/', '')
-                                  .replaceAll('-', ''),
-                              ATIVO: 'S',
-                              ID_EMPRESA:
-                                  int.tryParse(controllerBusca.text.trim()) ??
-                                      0,
-                              DESCRICAO: controllerDescricao.text.trim(),
-                              ID_APP: tiposApp.index + 1,
-                            );
-
-                            widget.licencaBloc.add(
-                              SaveLicencaEvent(
-                                licencaEntity: newLicencaEntity,
-                              ),
-                            );
-
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Salvar'),
-                        ),
+                      activeColor: AppTheme.colors.primary,
+                      title: const Text('Up Vendas'),
+                      value: TiposApp.upVendas,
+                      groupValue: tiposApp,
+                      onChanged: (TiposApp? value) {
+                        setStateAlert(() {
+                          tiposApp = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ],
-                  )
-                ],
+                      activeColor: AppTheme.colors.primary,
+                      title: const Text('Agil Coletas'),
+                      value: TiposApp.agilColetas,
+                      groupValue: tiposApp,
+                      onChanged: (TiposApp? value) {
+                        setStateAlert(() {
+                          tiposApp = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      activeColor: AppTheme.colors.primary,
+                      title: const Text('Posto Plus'),
+                      value: TiposApp.postoPlus,
+                      groupValue: tiposApp,
+                      onChanged: (TiposApp? value) {
+                        setStateAlert(() {
+                          tiposApp = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      activeColor: AppTheme.colors.primary,
+                      title: const Text('Transportes'),
+                      value: TiposApp.transportes,
+                      groupValue: tiposApp,
+                      onChanged: (TiposApp? value) {
+                        setStateAlert(() {
+                          tiposApp = value!;
+                        });
+                      },
+                    ),
+                    const Divider(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              controllerIDPhone.clear();
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (!keyIDPhone.currentState!.validate() ||
+                                  !keyDescricao.currentState!.validate()) {
+                                return;
+                              }
+
+                              final newLicencaEntity = NewLicencaEntity(
+                                ID_DEVICE: controllerIDPhone.text.trim(),
+                                APELIDO: cnpj
+                                    .replaceAll('.', '')
+                                    .replaceAll('/', '')
+                                    .replaceAll('-', ''),
+                                ATIVO: 'S',
+                                ID_EMPRESA:
+                                    int.tryParse(controllerBusca.text.trim()) ??
+                                        0,
+                                DESCRICAO: controllerDescricao.text.trim(),
+                                ID_APP: tiposApp.index + 1,
+                              );
+
+                              widget.licencaBloc.add(
+                                SaveLicencaEvent(
+                                  licencaEntity: newLicencaEntity,
+                                ),
+                              );
+
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Salvar'),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               );
             },
           ),
@@ -306,7 +330,8 @@ class _LicencaPageState extends State<LicencaPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Pesquisar cliente'),
+                Text('Pesquisar cliente',
+                    style: AppTheme.textStyles.titleLicenca),
                 const Divider(),
                 MyInputWidget(
                   autoFocus: true,
@@ -403,26 +428,39 @@ class _LicencaPageState extends State<LicencaPage> {
                         await showModalPesquisaCliente();
                       }
                     },
-                    child: MyInputWidget(
-                      autoFocus: false,
-                      focusNode: fBusca,
-                      hintText: 'Digite o código do cliente',
-                      label: 'Código do Cliente',
-                      onChanged: (value) {},
-                      onFieldSubmitted: (value) {
-                        widget.licencaBloc.add(
-                          GetLicencaEvent(
-                            codCliente:
-                                int.tryParse(controllerBusca.text.trim()) ?? 0,
-                          ),
-                        );
-                      },
-                      textEditingController: controllerBusca,
-                      formKey: keyBusca,
-                      inputFormaters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                    ),
+                    child: BlocBuilder<LicencaBloc, LicencaStates>(
+                        bloc: widget.licencaBloc,
+                        builder: (context, state) {
+                          return MyInputWidget(
+                            autoFocus: false,
+                            focusNode: fBusca,
+                            hintText: 'Digite o código do cliente',
+                            label: 'Código do Cliente',
+                            suffixIcon: state is LicencaLoadingState
+                                ? Container(
+                                    padding: const EdgeInsets.all(10),
+                                    width: 20,
+                                    height: 20,
+                                    child: const CircularProgressIndicator(),
+                                  )
+                                : null,
+                            onChanged: (value) {},
+                            onFieldSubmitted: (value) {
+                              widget.licencaBloc.add(
+                                GetLicencaEvent(
+                                  codCliente: int.tryParse(
+                                          controllerBusca.text.trim()) ??
+                                      0,
+                                ),
+                              );
+                            },
+                            textEditingController: controllerBusca,
+                            formKey: keyBusca,
+                            inputFormaters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                          );
+                        }),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -477,7 +515,39 @@ class _LicencaPageState extends State<LicencaPage> {
                 final listLicencas = state.licencasEntity;
 
                 if (listLicencas.licencas.isEmpty) {
-                  return Column(
+                  return Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Cliente: ',
+                                style: AppTheme.textStyles.labelCliente,
+                              ),
+                              TextSpan(
+                                text: listLicencas.cliente.name,
+                                style: AppTheme.textStyles.textCliente,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'Nenhuma licença encontrada.',
+                              style: AppTheme.textStyles.titleLicenca,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RichText(
@@ -494,167 +564,144 @@ class _LicencaPageState extends State<LicencaPage> {
                           ],
                         ),
                       ),
-                      Center(
-                        child: Text(
-                          'Nenhuma licença encontrada.',
-                          style: AppTheme.textStyles.titleLicenca,
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'CNPJ: ',
+                              style: AppTheme.textStyles.labelCliente,
+                            ),
+                            TextSpan(
+                              text: listLicencas.cliente.CNPJCPF,
+                              style: AppTheme.textStyles.textCliente,
+                            ),
+                            TextSpan(
+                              text: '  Telefone: ',
+                              style: AppTheme.textStyles.labelCliente,
+                            ),
+                            TextSpan(
+                              text: listLicencas.cliente.telefone,
+                              style: AppTheme.textStyles.textCliente,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  );
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Cliente: ',
-                            style: AppTheme.textStyles.labelCliente,
-                          ),
-                          TextSpan(
-                            text: listLicencas.cliente.name,
-                            style: AppTheme.textStyles.textCliente,
-                          ),
-                        ],
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              'Licenças',
+                              style: AppTheme.textStyles.titleLicenca,
+                            ),
+                            Container(
+                              height: 2,
+                              width: 150,
+                              color: Colors.grey.shade200,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'CNPJ: ',
-                            style: AppTheme.textStyles.labelCliente,
-                          ),
-                          TextSpan(
-                            text: listLicencas.cliente.CNPJCPF,
-                            style: AppTheme.textStyles.textCliente,
-                          ),
-                          TextSpan(
-                            text: '  Telefone: ',
-                            style: AppTheme.textStyles.labelCliente,
-                          ),
-                          TextSpan(
-                            text: listLicencas.cliente.telefone,
-                            style: AppTheme.textStyles.textCliente,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Licenças',
-                            style: AppTheme.textStyles.titleLicenca,
-                          ),
-                          Container(
-                            height: 2,
-                            width: 150,
-                            color: Colors.grey.shade200,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: context.screenHeight * .65,
-                      width: context.screenWidth,
-                      child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          late bool visibility = false;
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            late bool visibility = false;
 
-                          if (index == 0 ||
-                              listLicencas.licencas[index].app !=
-                                  listLicencas.licencas[index - 1].app) {
-                            visibility = true;
-                          }
+                            if (index == 0 ||
+                                listLicencas.licencas[index].app !=
+                                    listLicencas.licencas[index - 1].app) {
+                              visibility = true;
+                            }
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Visibility(
-                                visible: visibility,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      listLicencas.licencas[index].app,
-                                      style: AppTheme.textStyles.titleLicenca,
-                                    ),
-                                    Container(
-                                      height: 2,
-                                      width: listLicencas
-                                              .licencas[index].app.length
-                                              .toDouble() *
-                                          11,
-                                      color: Colors.grey.shade200,
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              ),
-                              ListTile(
-                                leading: Checkbox(
-                                  value:
-                                      listLicencas.licencas[index].ativo == 'S'
-                                          ? true
-                                          : false,
-                                  onChanged: (bool? value) {
-                                    final licencaEntity = NewLicencaEntity(
-                                      ID_DEVICE:
-                                          listLicencas.licencas[index].id,
-                                      APELIDO:
-                                          listLicencas.licencas[index].apelido,
-                                      ATIVO:
-                                          listLicencas.licencas[index].ativo ==
-                                                  'S'
-                                              ? 'N'
-                                              : 'S',
-                                      ID_EMPRESA: int.tryParse(
-                                              controllerBusca.text.trim()) ??
-                                          0,
-                                      DESCRICAO: listLicencas
-                                          .licencas[index].descricao,
-                                      ID_APP:
-                                          listLicencas.licencas[index].idApp,
-                                    );
-
-                                    widget.licencaBloc.add(
-                                      UpdateLicencaEvent(
-                                        licencaEntity: licencaEntity,
-                                        idDevice: licencaEntity.ID_DEVICE,
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Visibility(
+                                  visible: visibility,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        listLicencas.licencas[index].app,
+                                        style: AppTheme.textStyles.titleLicenca,
                                       ),
+                                      Container(
+                                        height: 2,
+                                        width: listLicencas
+                                                .licencas[index].app.length
+                                                .toDouble() *
+                                            11,
+                                        color: Colors.grey.shade200,
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: Checkbox(
+                                    value: listLicencas.licencas[index].ativo ==
+                                            'S'
+                                        ? true
+                                        : false,
+                                    onChanged: (bool? value) {
+                                      final licencaEntity = NewLicencaEntity(
+                                        ID_DEVICE:
+                                            listLicencas.licencas[index].id,
+                                        APELIDO: listLicencas
+                                            .licencas[index].apelido,
+                                        ATIVO: listLicencas
+                                                    .licencas[index].ativo ==
+                                                'S'
+                                            ? 'N'
+                                            : 'S',
+                                        ID_EMPRESA: int.tryParse(
+                                                controllerBusca.text.trim()) ??
+                                            0,
+                                        DESCRICAO: listLicencas
+                                            .licencas[index].descricao,
+                                        ID_APP:
+                                            listLicencas.licencas[index].idApp,
+                                      );
+
+                                      widget.licencaBloc.add(
+                                        UpdateLicencaEvent(
+                                          licencaEntity: licencaEntity,
+                                          idDevice: licencaEntity.ID_DEVICE,
+                                        ),
+                                      );
+                                    },
+                                    activeColor: AppTheme.colors.primary,
+                                  ),
+                                  title: Text(listLicencas.licencas[index].id),
+                                  subtitle: listLicencas
+                                          .licencas[index].descricao.isNotEmpty
+                                      ? Text(listLicencas
+                                          .licencas[index].descricao)
+                                      : null,
+                                  onTap: () async {
+                                    controllerUpdateLicenca.text =
+                                        listLicencas.licencas[index].id;
+
+                                    controllerUpdateDescricao.text =
+                                        listLicencas.licencas[index].descricao;
+
+                                    await showAlertUpdateLicenca(
+                                      licencasEntity: listLicencas,
+                                      index: index,
                                     );
                                   },
-                                  activeColor: AppTheme.colors.primary,
                                 ),
-                                title: Text(listLicencas.licencas[index].id),
-                                subtitle: listLicencas
-                                        .licencas[index].descricao.isNotEmpty
-                                    ? Text(
-                                        listLicencas.licencas[index].descricao)
-                                    : null,
-                                onTap: () async {
-                                  controllerUpdateLicenca.text =
-                                      listLicencas.licencas[index].id;
-
-                                  await showAlertUpdateLicenca(
-                                    licencasEntity: listLicencas,
-                                    index: index,
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                        separatorBuilder: (_, __) => const SizedBox(height: 10),
-                        itemCount: listLicencas.licencas.length,
-                      ),
-                    )
-                  ],
+                              ],
+                            );
+                          },
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 10),
+                          itemCount: listLicencas.licencas.length,
+                        ),
+                      )
+                    ],
+                  ),
                 );
               },
             ),

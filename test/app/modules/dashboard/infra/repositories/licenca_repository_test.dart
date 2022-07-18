@@ -1,19 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gerenciador_licenca/app/core_module/types/either.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/domain/entities/licencas_entity.dart';
+import 'package:gerenciador_licenca/app/modules/dashboard/infra/datasources/clientes_datasource.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/datasources/licenca_datasource.dart';
 import 'package:gerenciador_licenca/app/modules/dashboard/infra/repositories/licenca_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
 class ILicencaDataSourceMock extends Mock implements ILicencaDataSource {}
 
+class IClientesDataSourceMock extends Mock implements IClientesDataSource {}
+
 void main() {
   late ILicencaDataSource licencaDataSource;
+  late IClientesDataSource clientesDataSource;
   late LicencaRepository licencaRepository;
 
   setUp(() {
     licencaDataSource = ILicencaDataSourceMock();
-    licencaRepository = LicencaRepository(licencaDataSource: licencaDataSource);
+    clientesDataSource = IClientesDataSourceMock();
+    licencaRepository = LicencaRepository(
+      licencaDataSource: licencaDataSource,
+      clientesDataSource: clientesDataSource,
+    );
   });
 
   test('deve retornar uma instancia de LicencaEntity', () async {
