@@ -19,6 +19,7 @@ abstract class AppTextStyles {
   TextStyle get textoRadioList;
   TextStyle get textoConfirmarData;
   TextStyle get textoCancelarData;
+  TextStyle get subTitle;
 }
 
 class AppTextStylesDefault implements AppTextStyles {
@@ -105,5 +106,12 @@ class AppTextStylesDefault implements AppTextStyles {
         fontSize: 14,
         color: AppTheme.colors.primary,
         fontWeight: FontWeight.w600,
+      );
+
+  @override
+  TextStyle get subTitle => GoogleFonts.montserrat(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: AppTheme.colors.subTitle,
       );
 }

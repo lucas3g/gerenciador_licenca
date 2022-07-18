@@ -613,6 +613,12 @@ class _LicencaPageState extends State<LicencaPage> {
                               visibility = true;
                             }
 
+                            final subTotal = listLicencas.licencas
+                                .where((e) =>
+                                    e.app == listLicencas.licencas[index].app &&
+                                    e.ativo == 'S')
+                                .length;
+
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -623,7 +629,8 @@ class _LicencaPageState extends State<LicencaPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        listLicencas.licencas[index].app,
+                                        listLicencas
+                                            .licencas[index].app.capitalize,
                                         style: AppTheme.textStyles.titleLicenca,
                                       ),
                                       Container(
@@ -633,6 +640,10 @@ class _LicencaPageState extends State<LicencaPage> {
                                                 .toDouble() *
                                             11,
                                         color: Colors.grey.shade200,
+                                      ),
+                                      Text(
+                                        'SubTotal de licenças ativas: $subTotal',
+                                        style: AppTheme.textStyles.subTitle,
                                       ),
                                       const SizedBox(height: 10),
                                     ],
@@ -699,7 +710,12 @@ class _LicencaPageState extends State<LicencaPage> {
                               const SizedBox(height: 10),
                           itemCount: listLicencas.licencas.length,
                         ),
-                      )
+                      ),
+                      const Divider(),
+                      Text(
+                        'Total de licenças ativas: ${listLicencas.licencas.where((e) => e.ativo == 'S').length}',
+                        style: AppTheme.textStyles.titleLicenca,
+                      ),
                     ],
                   ),
                 );
