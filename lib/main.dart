@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -27,4 +28,10 @@ Future<void> main() async {
       child: const AppWidget(),
     ),
   );
+
+  doWhenWindowReady(() {
+    appWindow.isMaximized;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }

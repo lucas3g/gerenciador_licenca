@@ -47,6 +47,7 @@ dependencies:
   flutter_acrylic: ^1.0.0+2
   keyboard_event: ^0.3.2
   easy_debounce: ^2.0.2+1
+  bitsdojo_window: ^0.1.2
 
 dev_dependencies:
   flutter_test:
@@ -101,3 +102,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+msix_config:
+  display_name: Gerenciador de Licenças
+  publisher_name: Lucas Silva
+  publisher_display_name: EL Sistemas
+  identity_name: ElSistemas.Software.GerenciadorLicenca
+  publisher: CN=EL Sistemas, O=EL Sistemas, L=Lucas, S=Lucas, C=BR
+  architecture: x64
+  msix_version: 1.0.0.0
+  icons_background_color: ffffff
+  capabilities: "internetClient"
