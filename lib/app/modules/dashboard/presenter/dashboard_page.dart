@@ -58,7 +58,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       Navigator.pop(context);
                       Modular.to.navigate('/auth/');
                     },
-                    child: const Text('Sai da conta'),
+                    child: const Text('Sair da conta'),
                   ),
                 ),
                 const SizedBox(width: 15),
