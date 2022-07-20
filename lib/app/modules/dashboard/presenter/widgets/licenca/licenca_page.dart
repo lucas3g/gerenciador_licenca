@@ -270,6 +270,7 @@ class _LicencaPageState extends State<LicencaPage> {
                             onPressed: () {
                               Navigator.pop(context);
                               controllerIDPhone.clear();
+                              controllerDescricao.clear();
                             },
                             child: const Text('Cancelar'),
                           ),
@@ -304,6 +305,9 @@ class _LicencaPageState extends State<LicencaPage> {
                               );
 
                               Navigator.pop(context);
+
+                              controllerIDPhone.clear();
+                              controllerDescricao.clear();
                             },
                             child: const Text('Salvar'),
                           ),
