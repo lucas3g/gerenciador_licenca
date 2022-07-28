@@ -22,8 +22,6 @@ Future<void> main() async {
     await Window.hideWindowControls();
   }
 
-  //
-
   runApp(
     ModularApp(
       module: AppModule(),
